@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package br.com.uri.cs2mobile.ui.skins
+package br.com.uri.cs2mobile.ui.stickers
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,30 +17,20 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import br.com.uri.cs2mobile.data.Skin
+import br.com.uri.cs2mobile.data.Sticker
 import coil.compose.AsyncImage
 
-// Converte "#RRGGBB" / "#AARRGGBB" em Color Compose
-private fun hexToComposeColor(hex: String): Color = try {
-    val argb = android.graphics.Color.parseColor(hex)
-    val a = (argb ushr 24 and 0xFF) / 255f
-    val r = (argb ushr 16 and 0xFF) / 255f
-    val g = (argb ushr  8 and 0xFF) / 255f
-    val b = (argb         and 0xFF) / 255f
-    Color(r, g, b, a)
-} catch (_: Exception) { Color(0xFFB0BEC5) }
-
 @Composable
-fun SkinsScreen(
+fun StickersScreen(
     onBack: () -> Unit,
-    vm: SkinsViewModel = viewModel()
+    vm: StickersViewModel = viewModel()
 ) {
     val ui = vm.uiState
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("CS2 Mobile - Skins") },
+                title = { Text("CS2 Mobile - Adesivos") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
@@ -58,17 +48,16 @@ fun SkinsScreen(
         },
         containerColor = Color(0xFF121212)
     ) { paddingValues ->
-
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
-            // Busca
+            // 🔎 Barra de busca (igual à de Skins)
             OutlinedTextField(
                 value = ui.searchText,
                 onValueChange = vm::onSearchTextChanged,
-                label = { Text("Buscar skin por nome...") },
+                label = { Text("Buscar adesivo por nome...") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
@@ -100,17 +89,19 @@ fun SkinsScreen(
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(ui.error!!, color = Color.Red, textAlign = TextAlign.Center)
                             Spacer(Modifier.height(12.dp))
-                            FilledTonalButton(onClick = vm::retry) { Text("Tentar novamente") }
+                            FilledTonalButton(onClick = vm::retry) {
+                                Text("Tentar novamente")
+                            }
                         }
                     }
                 }
                 else -> {
                     LazyColumn(
-                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                        contentPadding = PaddingValues(16.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        items(ui.skins) { skin ->
-                            SkinListItem(skin = skin) { /* clique futuro */ }
+                        items(ui.stickers) { sticker ->
+                            StickerItem(sticker = sticker) { /* clique futuro */ }
                         }
                     }
                 }
@@ -120,7 +111,7 @@ fun SkinsScreen(
 }
 
 @Composable
-private fun SkinListItem(skin: Skin, onClick: () -> Unit) {
+private fun StickerItem(sticker: Sticker, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -132,38 +123,20 @@ private fun SkinListItem(skin: Skin, onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
-                model = skin.image,
-                contentDescription = "Imagem da skin ${skin.name}",
+                model = sticker.image,
+                contentDescription = "Imagem do adesivo ${sticker.name}",
                 modifier = Modifier.size(80.dp)
             )
             Spacer(Modifier.width(16.dp))
             Column {
                 Text(
-                    text = skin.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White
+                    sticker.name,
+                    color = Color.White,
+                    style = MaterialTheme.typography.titleMedium
                 )
-
-                val weaponName = skin.weapon?.name
-                val categoryName = skin.category?.name
-                val secondary = listOfNotNull(weaponName, categoryName).joinToString(" · ")
-                if (secondary.isNotBlank()) {
-                    Spacer(Modifier.height(2.dp))
-                    Text(
-                        text = secondary,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color(0xFFB0BEC5)
-                    )
-                }
-
-                skin.rarity?.let { r ->
+                sticker.rarity?.name?.let {
                     Spacer(Modifier.height(4.dp))
-                    val rarityColor = r.color?.let { hexToComposeColor(it) } ?: Color(0xFFB0BEC5)
-                    Text(
-                        text = r.name ?: "Raridade desconhecida",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = rarityColor
-                    )
+                    Text(it, color = Color(0xFFB0BEC5), style = MaterialTheme.typography.bodySmall)
                 }
             }
         }

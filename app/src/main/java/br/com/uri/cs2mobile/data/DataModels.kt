@@ -1,31 +1,45 @@
 package br.com.uri.cs2mobile.data
 
-data class SkinCategory(
-    val id: String?,
-    val name: String?
-)
-
-data class SkinWeapon(
-    val id: String?,
-    val name: String?
-)
+import com.squareup.moshi.Json
 
 data class Skin(
-    val id: String,
-    val name: String,
-    val description: String?,
-    val weapon: SkinWeapon?, // <-- A mudança para weapon está aqui
-    val category: SkinCategory?,
-    val pattern: String?,
-    val rarity: String?,
-    val image: String
+    @Json(name = "id") val id: String = "",
+    @Json(name = "name") val name: String = "",
+    @Json(name = "description") val description: String? = null,
+
+    @Json(name = "weapon") val weapon: WeaponInfo? = null,
+    @Json(name = "category") val category: CategoryInfo? = null,
+    @Json(name = "pattern") val pattern: PatternInfo? = null,
+    @Json(name = "rarity") val rarity: RarityInfo? = null,
+
+    @Json(name = "image") val image: String = ""
 )
 
-// A classe Sticker permanece igual.
+data class WeaponInfo(
+    @Json(name = "id") val id: String? = null,
+    @Json(name = "name") val name: String? = null
+)
+
+data class CategoryInfo(
+    @Json(name = "id") val id: String? = null,
+    @Json(name = "name") val name: String? = null
+)
+
+data class PatternInfo(
+    @Json(name = "id") val id: String? = null,
+    @Json(name = "name") val name: String? = null
+)
+
+data class RarityInfo(
+    @Json(name = "id") val id: String? = null,
+    @Json(name = "name") val name: String? = null,
+    @Json(name = "color") val color: String? = null
+)
+
 data class Sticker(
-    val id: String,
-    val name: String,
-    val description: String?,
-    val rarity: String?,
-    val image: String
+    @Json(name = "id") val id: String = "",
+    @Json(name = "name") val name: String = "",
+    @Json(name = "description") val description: String? = null,
+    @Json(name = "rarity") val rarity: RarityInfo? = null,
+    @Json(name = "image") val image: String = ""
 )

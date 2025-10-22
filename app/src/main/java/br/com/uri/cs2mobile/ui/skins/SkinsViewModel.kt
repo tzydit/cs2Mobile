@@ -1,5 +1,6 @@
 package br.com.uri.cs2mobile.ui.skins
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -7,49 +8,74 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.uri.cs2mobile.data.Skin
 import br.com.uri.cs2mobile.network.RetrofitInstance
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 
 class SkinsViewModel : ViewModel() {
 
-    private var fullSkinsList: List<Skin> = listOf()
+    private var fullSkinsList: List<Skin> = emptyList()
 
-    var uiState by mutableStateOf(SkinsUiState())
+    var uiState by mutableStateOf(SkinsUiState(isLoading = true))
         private set
 
-    init {
-        fetchSkins()
+    init { fetchSkins() }
+
+    fun retry() = fetchSkins()
+
+    private fun set(block: SkinsUiState.() -> SkinsUiState) {
+        uiState = uiState.block()
     }
 
     private fun fetchSkins() {
         viewModelScope.launch {
-            uiState = uiState.copy(isLoading = true) // Inicia o estado de carregamento
-            try {
-                val skins = RetrofitInstance.api.getSkins()
-                fullSkinsList = skins
-                uiState = uiState.copy(skins = skins, isLoading = false)
-            } catch (e: Exception) {
-                uiState = uiState.copy(isLoading = false, error = "Falha ao carregar skins.")
-                // ✅ MUDE A LINHA ABAIXO
-                e.printStackTrace() // Isso vai imprimir o erro completo no Logcat
+            set { copy(isLoading = true, error = null) }
+
+            val langs = listOf("pt-BR", "en")
+            var data: List<Skin>? = null
+            var lastErr: Throwable? = null
+
+            for (lang in langs) {
+                try {
+                    val result = withContext(Dispatchers.IO) {
+                        Log.d("SkinsVM", "GET skins lang=$lang")
+                        RetrofitInstance.api.getSkins(lang)
+                    }
+                    data = result
+                    break
+                } catch (e: Throwable) {
+                    lastErr = e
+                    Log.e("SkinsVM", "lang=$lang falhou (code=${(e as? HttpException)?.code()})", e)
+                }
+            }
+
+            if (data != null) {
+                fullSkinsList = data!!
+                set { copy(isLoading = false, skins = fullSkinsList, error = null) }
+            } else {
+                val msg = when (lastErr) {
+                    is HttpException -> "Erro ${(lastErr as HttpException).code()} ao buscar skins."
+                    null -> "Falha desconhecida ao buscar skins."
+                    else -> "Falha ao buscar skins: ${lastErr?.message}"
+                }
+                set { copy(isLoading = false, error = msg) }
             }
         }
     }
 
     fun onSearchTextChanged(newText: String) {
-        val filteredList = if (newText.isBlank()) {
-            fullSkinsList
-        } else {
-            fullSkinsList.filter { skin ->
-                skin.name.contains(newText, ignoreCase = true)
-            }
-        }
-        uiState = uiState.copy(searchText = newText, skins = filteredList)
-    }
+        val filtered =
+            if (newText.isBlank()) fullSkinsList
+            else fullSkinsList.filter { it.name.contains(newText, ignoreCase = true) }
 
-    data class SkinsUiState(
-        val skins: List<Skin> = emptyList(),
-        val searchText: String = "",
-        val isLoading: Boolean = false,
-        val error: String? = null
-    )
+        set { copy(searchText = newText, skins = filtered) }
+    }
 }
+
+data class SkinsUiState(
+    val skins: List<Skin> = emptyList(),
+    val searchText: String = "",
+    val isLoading: Boolean = false,
+    val error: String? = null
+)
