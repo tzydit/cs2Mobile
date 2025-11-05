@@ -1,6 +1,8 @@
 package br.com.uri.cs2mobile.data
 
 import com.squareup.moshi.Json
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
 data class Skin(
     @Json(name = "id") val id: String = "",
@@ -42,4 +44,46 @@ data class Sticker(
     @Json(name = "description") val description: String? = null,
     @Json(name = "rarity") val rarity: RarityInfo? = null,
     @Json(name = "image") val image: String = ""
+)
+
+@Parcelize
+data class Highlight(
+    val id: String,
+    val name: String,
+    val description: String?,
+    val tournament_event: String?,
+    val team0: String?,
+    val team1: String?,
+    val stage: String?,
+    val map: String?,
+    val market_hash_name: String?,
+    val image: String?,
+    val video: String?
+) : Parcelable
+
+data class CrateItem(
+    val id: String?,
+    val name: String?,
+    val rarity: RarityLite?,
+    val paint_index: String?,
+    val image: String?
+)
+
+data class RarityLite(
+    val id: String?,
+    val name: String?,
+    val color: String?
+)
+
+data class Crate(
+    val id: String,
+    val name: String,
+    val description: String?,
+    val type: String?,
+    val first_sale_date: String?,
+    val contains: List<CrateItem>?,
+    val contains_rare: List<CrateItem>?,
+    val market_hash_name: String?,
+    val rental: Boolean?,
+    val image: String?
 )
