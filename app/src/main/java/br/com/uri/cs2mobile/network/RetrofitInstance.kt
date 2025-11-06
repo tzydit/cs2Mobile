@@ -10,9 +10,8 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitInstance {
 
-    // Base oficial sem idioma; o idioma entra na rota (ex.: en/skins.json)
     private const val BASE_URL =
-        "https://raw.githubusercontent.com/ByMykel/CSGO-API/main/public/api/"
+        "https://raw.githubusercontent.com/ByMykel/CSGO-API/main/"
 
     private val moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
@@ -20,7 +19,6 @@ object RetrofitInstance {
 
     private val client: OkHttpClient by lazy {
         val logging = HttpLoggingInterceptor().apply {
-            // BODY trava com esse JSON gigante; BASIC é o suficiente p/ ver URL + status
             level = HttpLoggingInterceptor.Level.BASIC
         }
         OkHttpClient.Builder()

@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 
 package br.com.uri.cs2mobile.ui.highlights
 
@@ -26,6 +26,9 @@ fun HighlightsScreen(
     vm: HighlightsViewModel = viewModel()
 ) {
     val ui = vm.uiState
+    val filtered = ui.highlights.filter {
+        ui.searchText.isBlank() || it.name.contains(ui.searchText, ignoreCase = true)
+    }
 
     Scaffold(
         topBar = {
@@ -49,7 +52,7 @@ fun HighlightsScreen(
             OutlinedTextField(
                 value = ui.searchText,
                 onValueChange = vm::onSearchTextChanged,
-                label = { Text("Buscar highlight...") },
+                label = { Text("Buscar highlight por nome...") },
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
                 singleLine = true,
                 textStyle = TextStyle(color = Color.White),
@@ -75,8 +78,8 @@ fun HighlightsScreen(
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    items(ui.highlights) { h ->
-                        HighlightItem(h) { onOpenDetail(h) }
+                    items(filtered) { h ->
+                        HighlightRow(h) { onOpenDetail(h) }
                     }
                 }
             }
@@ -85,7 +88,7 @@ fun HighlightsScreen(
 }
 
 @Composable
-private fun HighlightItem(h: Highlight, onClick: () -> Unit) {
+private fun HighlightRow(h: Highlight, onClick: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2E))
@@ -95,10 +98,9 @@ private fun HighlightItem(h: Highlight, onClick: () -> Unit) {
             Spacer(Modifier.width(12.dp))
             Column {
                 Text(h.name, color = Color.White, style = MaterialTheme.typography.titleMedium)
-                val subtitle = listOfNotNull(h.tournament_event, h.map).joinToString(" · ")
-                if (subtitle.isNotBlank()) {
+                h.stage?.let {
                     Spacer(Modifier.height(2.dp))
-                    Text(subtitle, color = Color(0xFFB0BEC5), style = MaterialTheme.typography.bodySmall)
+                    Text(it, color = Color(0xFFB0BEC5), style = MaterialTheme.typography.bodySmall)
                 }
             }
         }

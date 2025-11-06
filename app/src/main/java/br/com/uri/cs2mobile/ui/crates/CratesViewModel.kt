@@ -1,6 +1,5 @@
 package br.com.uri.cs2mobile.ui.crates
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,63 +14,69 @@ import retrofit2.HttpException
 
 class CratesViewModel : ViewModel() {
 
-    private var fullList: List<Crate> = emptyList()
-
-    var uiState by mutableStateOf(CratesUiState(isLoading = true))
+    var uiState by mutableStateOf(
+        CratesUiState(isLoading = true, searchText = "")
+    )
         private set
+
+    private var allCrates: List<Crate> = emptyList()
 
     init { fetch() }
 
     fun retry() = fetch()
 
-    private fun set(block: CratesUiState.() -> CratesUiState) {
-        uiState = uiState.block()
+    fun onSearchTextChanged(newText: String) {
+        uiState = uiState.copy(searchText = newText)
+        applyFilter()
     }
 
     private fun fetch() {
         viewModelScope.launch {
-            set { copy(isLoading = true, error = null) }
+            uiState = uiState.copy(isLoading = true, error = null)
 
             val langs = listOf("pt-BR", "en")
-            var data: List<Crate>? = null
+            var loaded: List<Crate>? = null
             var last: Throwable? = null
 
             for (lang in langs) {
                 try {
-                    val res = withContext(Dispatchers.IO) {
-                        Log.d("CratesVM", "GET crates lang=$lang")
+                    loaded = withContext(Dispatchers.IO) {
                         RetrofitInstance.api.getCrates(lang)
                     }
-                    data = res
                     break
-                } catch (e: Throwable) {
-                    last = e
-                    Log.e("CratesVM", "falha lang=$lang code=${(e as? HttpException)?.code()}", e)
+                } catch (t: Throwable) {
+                    last = t
                 }
             }
 
-            if (data != null) {
-                fullList = data!!
-                set { copy(isLoading = false, crates = fullList) }
+            if (loaded != null) {
+                allCrates = loaded
+                uiState = uiState.copy(isLoading = false)
+                applyFilter()
             } else {
                 val msg = when (last) {
                     is HttpException -> "Erro ${(last as HttpException).code()} ao buscar crates."
                     null -> "Falha desconhecida ao buscar crates."
                     else -> "Falha ao buscar crates: ${last?.message}"
                 }
-                set { copy(isLoading = false, error = msg) }
+                uiState = uiState.copy(isLoading = false, error = msg)
             }
         }
     }
 
-    fun onSearchTextChanged(newText: String) {
-        val filtered =
-            if (newText.isBlank()) fullList
-            else fullList.filter {
-                it.name.contains(newText, true) ||
-                        (it.type ?: "").contains(newText, true)
+    private fun applyFilter() {
+        val q = uiState.searchText.trim().lowercase()
+        val filtered = if (q.isEmpty()) {
+            allCrates
+        } else {
+            allCrates.filter { c ->
+                val name = c.name.orEmpty().lowercase()
+                val type = c.type.orEmpty().lowercase()
+                val date = c.first_sale_date.orEmpty().lowercase()
+                name.contains(q) || type.contains(q) || date.contains(q)
             }
-        set { copy(searchText = newText, crates = filtered) }
+        }
+        uiState = uiState.copy(crates = filtered)
     }
 }
 

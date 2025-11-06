@@ -22,6 +22,7 @@ import coil.compose.AsyncImage
 @Composable
 fun CratesScreen(
     onBack: () -> Unit,
+    onOpenDetail: (Crate) -> Unit,
     vm: CratesViewModel = viewModel()
 ) {
     val ui = vm.uiState
@@ -70,8 +71,13 @@ fun CratesScreen(
                         FilledTonalButton(onClick = vm::retry) { Text("Tentar novamente") }
                     }
                 }
-                else -> LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    items(ui.crates) { c -> CrateItem(c) { /* clique futuro */ } }
+                else -> LazyColumn(
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(ui.crates) { c ->
+                        CrateItem(c) { onOpenDetail(c) }
+                    }
                 }
             }
         }
