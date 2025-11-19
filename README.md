@@ -78,6 +78,8 @@ A seguir estão listadas todas as funcionalidades implementadas ao longo das ent
 
 ##  Desenvolvedores:
 Gabriel Zaion
+
 Henrique Jornada
+
 Miguel Reis
 
