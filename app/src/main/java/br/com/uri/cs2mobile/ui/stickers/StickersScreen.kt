@@ -23,6 +23,7 @@ import coil.compose.AsyncImage
 @Composable
 fun StickersScreen(
     onBack: () -> Unit,
+    onOpenDetail: (Sticker) -> Unit,
     vm: StickersViewModel = viewModel()
 ) {
     val ui = vm.uiState
@@ -53,7 +54,6 @@ fun StickersScreen(
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
-            // 🔎 Barra de busca (igual à de Skins)
             OutlinedTextField(
                 value = ui.searchText,
                 onValueChange = vm::onSearchTextChanged,
@@ -101,7 +101,10 @@ fun StickersScreen(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         items(ui.stickers) { sticker ->
-                            StickerItem(sticker = sticker) { /* clique futuro */ }
+                            StickerItem(
+                                sticker = sticker,
+                                onClick = { onOpenDetail(sticker) }
+                            )
                         }
                     }
                 }

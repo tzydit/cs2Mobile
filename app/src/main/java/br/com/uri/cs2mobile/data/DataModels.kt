@@ -1,8 +1,6 @@
 package br.com.uri.cs2mobile.data
 
 import com.squareup.moshi.Json
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 
 data class Skin(
     @Json(name = "id") val id: String = "",
@@ -46,7 +44,6 @@ data class Sticker(
     @Json(name = "image") val image: String = ""
 )
 
-@Parcelize
 data class Highlight(
     val id: String,
     val name: String,
@@ -59,7 +56,7 @@ data class Highlight(
     val market_hash_name: String?,
     val image: String?,
     val video: String?
-) : Parcelable
+)
 
 data class CrateItem(
     val id: String?,
@@ -93,12 +90,10 @@ data class Agent(
     @Json(name = "name") val name: String = "",
     @Json(name = "description") val description: String? = null,
     @Json(name = "image") val image: String? = null,
-    // O "team" geralmente é um objeto na API, não uma String pura
     @Json(name = "team") val team: TeamInfo? = null,
     @Json(name = "rarity") val rarity: RarityInfo? = null
 )
 
-// Crie essa classe auxiliar para o time (se não tiver ainda)
 data class TeamInfo(
     @Json(name = "id") val id: String? = null,
     @Json(name = "name") val name: String? = null

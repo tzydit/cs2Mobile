@@ -33,6 +33,7 @@ private fun hexToComposeColor(hex: String): Color = try {
 @Composable
 fun SkinsScreen(
     onBack: () -> Unit,
+    onOpenDetail: (Skin) -> Unit,
     vm: SkinsViewModel = viewModel()
 ) {
     val ui = vm.uiState
@@ -110,7 +111,10 @@ fun SkinsScreen(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         items(ui.skins) { skin ->
-                            SkinListItem(skin = skin) { /* clique futuro */ }
+                            SkinListItem(
+                                skin = skin,
+                                onClick = { onOpenDetail(skin) }
+                            )
                         }
                     }
                 }
