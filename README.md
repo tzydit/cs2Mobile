@@ -2,9 +2,11 @@
 
 Este projeto tem como objetivo disponibilizar uma aplicação para visualização, busca e detalhamento de diversos itens relacionados ao universo de Counter Strike, incluindo **skins**, **stickers**, **highlights**, **crates** e **agents**.
 
-###  Demonstração: 
+##  Demonstração: 
 ![cs2 demo](/assets/cs2_demo.gif)
 ---
+
+
 
 A seguir estão listadas todas as funcionalidades implementadas ao longo das entregas.
 
@@ -49,7 +51,7 @@ A seguir estão listadas todas as funcionalidades implementadas ao longo das ent
 
 ---
 
-## 🛠 Tecnologias Utilizadas
+## Tecnologias Utilizadas
 - Kotlin 
 - Android Studio
 - Git & GitHub 
@@ -57,7 +59,7 @@ A seguir estão listadas todas as funcionalidades implementadas ao longo das ent
 ---
 
 
-## 🚀 Como Executar o Projeto
+## Como Executar o Projeto
 
 1. Clone o repositório:
    ```bash
