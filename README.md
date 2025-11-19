@@ -3,9 +3,8 @@
 Este projeto tem como objetivo disponibilizar uma aplicação para visualização, busca e detalhamento de diversos itens relacionados ao universo de Counter Strike, incluindo **skins**, **stickers**, **highlights**, **crates** e **agents**.
 
 ###  Demonstração: 
-
+![cs2 demo](/assets/cs2_demo.gif)
 ---
-
 
 A seguir estão listadas todas as funcionalidades implementadas ao longo das entregas.
 
