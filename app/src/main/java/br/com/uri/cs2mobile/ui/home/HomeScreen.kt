@@ -45,7 +45,8 @@ fun HomeScreen(
     onOpenSkins: () -> Unit,
     onOpenStickers: () -> Unit,
     onOpenHighlights: () -> Unit,
-    onOpenCrates: () -> Unit
+    onOpenCrates: () -> Unit,
+    onOpenAgents: () -> Unit // ✅ Novo parâmetro
 ) {
 
     var featuredSkins by remember { mutableStateOf<List<Skin>>(emptyList()) }
@@ -130,6 +131,7 @@ fun HomeScreen(
                 Spacer(Modifier.height(12.dp))
             }
 
+            // Linha 1: Skins e Adesivos
             item {
                 Row(
                     Modifier
@@ -144,6 +146,7 @@ fun HomeScreen(
 
             item { Spacer(Modifier.height(16.dp)) }
 
+            // Linha 2: Highlights e Crates
             item {
                 Row(
                     Modifier
@@ -153,6 +156,22 @@ fun HomeScreen(
                 ) {
                     HomeCategoryCard("Highlights", onOpenHighlights, Modifier.weight(1f))
                     HomeCategoryCard("Crates", onOpenCrates, Modifier.weight(1f))
+                }
+            }
+
+            item { Spacer(Modifier.height(16.dp)) }
+
+            // ✅ Linha 3: Agentes (Novo)
+            item {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    HomeCategoryCard("Agentes", onOpenAgents, Modifier.weight(1f))
+                    // Spacer vazio para manter o card alinhado à esquerda com o mesmo tamanho dos de cima
+                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
         }
@@ -174,7 +193,7 @@ private fun WelcomeSection() {
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Explore skins, adesivos, caixas e os melhores momentos do jogo diretamente no seu celular.",
+            text = "Explore skins, adesivos, caixas, agentes e os melhores momentos do jogo diretamente no celular.",
             style = MaterialTheme.typography.bodyLarge,
             color = Color(0xFFB0BEC5)
         )

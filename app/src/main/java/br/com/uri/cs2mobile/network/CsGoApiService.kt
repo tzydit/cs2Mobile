@@ -16,4 +16,7 @@ interface CsGoApiService {
 
     @GET("public/api/{lang}/highlights.json")
     suspend fun getHighlights(@Path("lang") lang: String): List<Highlight>
+
+    @GET("public/api/{lang}/agents.json")
+    suspend fun getAgents(@Path("lang") lang: String): List<Agent>
 }
