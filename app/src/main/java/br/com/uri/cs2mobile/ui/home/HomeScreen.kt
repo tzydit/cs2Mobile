@@ -131,7 +131,6 @@ fun HomeScreen(
                 Spacer(Modifier.height(12.dp))
             }
 
-            // Linha 1: Skins e Adesivos
             item {
                 Row(
                     Modifier
@@ -146,7 +145,6 @@ fun HomeScreen(
 
             item { Spacer(Modifier.height(16.dp)) }
 
-            // Linha 2: Highlights e Crates
             item {
                 Row(
                     Modifier
@@ -161,7 +159,6 @@ fun HomeScreen(
 
             item { Spacer(Modifier.height(16.dp)) }
 
-            // ✅ Linha 3: Agentes (Novo)
             item {
                 Row(
                     Modifier
@@ -170,7 +167,6 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     HomeCategoryCard("Agentes", onOpenAgents, Modifier.weight(1f))
-                    // Spacer vazio para manter o card alinhado à esquerda com o mesmo tamanho dos de cima
                     Spacer(modifier = Modifier.weight(1f))
                 }
             }

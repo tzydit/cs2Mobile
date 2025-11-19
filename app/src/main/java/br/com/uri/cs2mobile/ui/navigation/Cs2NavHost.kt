@@ -16,6 +16,7 @@ import br.com.uri.cs2mobile.ui.highlights.HighlightDetailScreen
 import br.com.uri.cs2mobile.ui.crates.CratesScreen
 import br.com.uri.cs2mobile.ui.crates.CrateDetailScreen
 import br.com.uri.cs2mobile.ui.agents.AgentsScreen
+import br.com.uri.cs2mobile.ui.agents.AgentDetailScreen // <--- Importe a nova tela aqui
 
 object Routes {
     const val HOME = "home"
@@ -33,6 +34,7 @@ object Routes {
     const val CRATE_DETAIL = "crate_detail"
 
     const val AGENTS = "agents"
+    const val AGENT_DETAIL = "agent_detail"
 }
 
 @Composable
@@ -59,16 +61,12 @@ fun Cs2NavHost(navController: NavHostController) {
                 }
             )
         }
-
         composable(
             route = "${Routes.SKIN_DETAIL}/{id}",
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) { entry ->
             val id = entry.arguments?.getString("id") ?: return@composable
-            SkinDetailScreen(
-                id = id,
-                onBack = { navController.navigateUp() }
-            )
+            SkinDetailScreen(id = id, onBack = { navController.navigateUp() })
         }
 
         composable(Routes.STICKERS) {
@@ -79,20 +77,28 @@ fun Cs2NavHost(navController: NavHostController) {
                 }
             )
         }
-
         composable(
             route = "${Routes.STICKER_DETAIL}/{id}",
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) { entry ->
             val id = entry.arguments?.getString("id") ?: return@composable
-            StickerDetailScreen(
-                id = id,
-                onBack = { navController.navigateUp() }
-            )
+            StickerDetailScreen(id = id, onBack = { navController.navigateUp() })
         }
 
         composable(Routes.AGENTS) {
-            AgentsScreen(onBack = { navController.navigateUp() })
+            AgentsScreen(
+                onBack = { navController.navigateUp() },
+                onOpenDetail = { agent ->
+                    navController.navigate("${Routes.AGENT_DETAIL}/${agent.id}")
+                }
+            )
+        }
+        composable(
+            route = "${Routes.AGENT_DETAIL}/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) { entry ->
+            val id = entry.arguments?.getString("id") ?: return@composable
+            AgentDetailScreen(id = id, onBack = { navController.navigateUp() })
         }
 
         composable(Routes.HIGHLIGHTS) {

@@ -20,7 +20,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.uri.cs2mobile.data.Agent
 import coil.compose.AsyncImage
 
-// Função auxiliar de cor (igual à tela de Skins)
 private fun hexToComposeColor(hex: String): Color = try {
     val argb = android.graphics.Color.parseColor(hex)
     val a = (argb ushr 24 and 0xFF) / 255f
@@ -32,17 +31,15 @@ private fun hexToComposeColor(hex: String): Color = try {
 
 @Composable
 fun AgentsScreen(
-    onBack: () -> Unit, // Se não usar navegação de volta, pode remover
+    onBack: () -> Unit,
+    onOpenDetail: (Agent) -> Unit,
     vm: AgentsViewModel = viewModel()
 ) {
-    // Coletando estados do ViewModel
     val agents by vm.agents.collectAsState()
     val isLoading by vm.isLoading.collectAsState()
 
-    // Estado local para a busca (filtragem na tela)
     var searchText by remember { mutableStateOf("") }
 
-    // Lógica de filtro local
     val filteredAgents = remember(agents, searchText) {
         if (searchText.isBlank()) agents
         else agents.filter { it.name.contains(searchText, ignoreCase = true) }
@@ -67,7 +64,7 @@ fun AgentsScreen(
                 )
             )
         },
-        containerColor = Color(0xFF121212) // Fundo escuro igual Skins
+        containerColor = Color(0xFF121212)
     ) { paddingValues ->
 
         Column(
@@ -75,7 +72,6 @@ fun AgentsScreen(
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
-            // Campo de Busca
             OutlinedTextField(
                 value = searchText,
                 onValueChange = { searchText = it },
@@ -107,7 +103,10 @@ fun AgentsScreen(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         items(filteredAgents) { agent ->
-                            AgentListItem(agent = agent) { /* clique futuro */ }
+                            AgentListItem(
+                                agent = agent,
+                                onClick = { onOpenDetail(agent) }
+                            )
                         }
                     }
                 }
@@ -122,7 +121,7 @@ private fun AgentListItem(agent: Agent, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2E)) // Cor do Card igual Skins
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2E))
     ) {
         Row(
             modifier = Modifier.padding(12.dp),
@@ -132,7 +131,7 @@ private fun AgentListItem(agent: Agent, onClick: () -> Unit) {
                 model = agent.image,
                 contentDescription = "Imagem do agente ${agent.name}",
                 modifier = Modifier.size(80.dp),
-                contentScale = ContentScale.Fit // Fit para ver o corpo/rosto melhor
+                contentScale = ContentScale.Fit
             )
 
             Spacer(Modifier.width(16.dp))
@@ -166,8 +165,8 @@ private fun AgentListItem(agent: Agent, onClick: () -> Unit) {
                 } ?: run {
                     Spacer(Modifier.height(4.dp))
                     val teamColor = when {
-                        teamName.contains("Counter", true) -> Color(0xFF5D79AE) // Azulado
-                        teamName.contains("Terrorist", true) -> Color(0xFFDE9B35) // Amarelado
+                        teamName.contains("Counter", true) -> Color(0xFF5D79AE)
+                        teamName.contains("Terrorist", true) -> Color(0xFFDE9B35)
                         else -> Color.Gray
                     }
                     Text(

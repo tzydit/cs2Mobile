@@ -20,7 +20,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.uri.cs2mobile.data.Skin
 import coil.compose.AsyncImage
 
-// Converte "#RRGGBB" / "#AARRGGBB" em Color Compose
 private fun hexToComposeColor(hex: String): Color = try {
     val argb = android.graphics.Color.parseColor(hex)
     val a = (argb ushr 24 and 0xFF) / 255f
