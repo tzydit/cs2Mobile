@@ -62,7 +62,7 @@ A seguir estão listadas todas as funcionalidades implementadas ao longo das ent
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/seu-repositorio/projeto-android.git
+   git clone https://github.com/tzydit/cs2Mobile
 -> Abra o Android Studio.
 
 -> Clique em File → Open e selecione a pasta do projeto.
