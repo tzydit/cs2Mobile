@@ -33,7 +33,7 @@ fun CrateDetailScreen(
     LaunchedEffect(id) {
         loading = true; error = null
         try {
-            val langs = listOf("pt-BR", "en")
+            val langs = listOf("en")
             var found: Crate? = null
             for (lang in langs) {
                 val list = withContext(Dispatchers.IO) {

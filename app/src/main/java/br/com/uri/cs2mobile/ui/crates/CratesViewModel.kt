@@ -34,7 +34,7 @@ class CratesViewModel : ViewModel() {
         viewModelScope.launch {
             uiState = uiState.copy(isLoading = true, error = null)
 
-            val langs = listOf("pt-BR", "en")
+            val langs = listOf("en")
             var loaded: List<Crate>? = null
             var last: Throwable? = null
 

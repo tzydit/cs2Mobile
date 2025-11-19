@@ -32,7 +32,7 @@ class SkinsViewModel : ViewModel() {
         viewModelScope.launch {
             set { copy(isLoading = true, error = null) }
 
-            val langs = listOf("pt-BR", "en")
+            val langs = listOf("en")
             var data: List<Skin>? = null
             var lastErr: Throwable? = null
 

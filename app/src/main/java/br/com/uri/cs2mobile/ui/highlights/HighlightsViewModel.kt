@@ -39,7 +39,7 @@ class HighlightsViewModel : ViewModel() {
     private fun fetch() {
         viewModelScope.launch {
             set { copy(isLoading = true, error = null) }
-            val langs = listOf("pt-BR", "en")
+            val langs = listOf("en")
             var data: List<Highlight>? = null
             var last: Throwable? = null
             for (lang in langs) {

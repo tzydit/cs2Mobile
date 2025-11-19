@@ -36,7 +36,7 @@ fun HighlightDetailScreen(
     LaunchedEffect(id) {
         loading = true; errorMsg = null
         try {
-            val langs = listOf("pt-BR", "en")
+            val langs = listOf("en")
             var found: Highlight? = null
             for (lang in langs) {
                 val list = withContext(Dispatchers.IO) { RetrofitInstance.api.getHighlights(lang) }

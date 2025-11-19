@@ -54,7 +54,7 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         isLoadingSkins = true
         var skinsList: List<Skin>? = null
-        val langs = listOf("pt-BR", "en")
+        val langs = listOf("en")
 
         for (lang in langs) {
             try {
