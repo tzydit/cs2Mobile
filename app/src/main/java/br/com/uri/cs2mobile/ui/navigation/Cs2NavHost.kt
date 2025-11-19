@@ -13,6 +13,7 @@ import br.com.uri.cs2mobile.ui.highlights.HighlightsScreen
 import br.com.uri.cs2mobile.ui.highlights.HighlightDetailScreen
 import br.com.uri.cs2mobile.ui.crates.CratesScreen
 import br.com.uri.cs2mobile.ui.crates.CrateDetailScreen
+import br.com.uri.cs2mobile.ui.agents.AgentsScreen
 
 object Routes {
     const val HOME = "home"
@@ -22,6 +23,7 @@ object Routes {
     const val HIGHLIGHT_DETAIL = "highlight_detail"
     const val CRATES = "crates"
     const val CRATE_DETAIL = "crate_detail"
+    const val AGENTS = "agents"
 }
 
 @Composable
@@ -35,12 +37,20 @@ fun Cs2NavHost(navController: NavHostController) {
                 onOpenSkins      = { navController.navigate(Routes.SKINS) },
                 onOpenStickers   = { navController.navigate(Routes.STICKERS) },
                 onOpenHighlights = { navController.navigate(Routes.HIGHLIGHTS) },
-                onOpenCrates     = { navController.navigate(Routes.CRATES) }
+                onOpenCrates     = { navController.navigate(Routes.CRATES) },
+                onOpenAgents     = { navController.navigate(Routes.AGENTS) }
             )
         }
 
         composable(Routes.SKINS)    { SkinsScreen(onBack = { navController.navigateUp() }) }
         composable(Routes.STICKERS) { StickersScreen(onBack = { navController.navigateUp() }) }
+
+        // ✅ CORRIGIDO: Passando a função onBack corretamente
+        composable(Routes.AGENTS) {
+            AgentsScreen(
+                onBack = { navController.navigateUp() }
+            )
+        }
 
         composable(Routes.HIGHLIGHTS) {
             HighlightsScreen(

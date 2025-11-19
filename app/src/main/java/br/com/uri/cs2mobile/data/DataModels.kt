@@ -87,3 +87,19 @@ data class Crate(
     val rental: Boolean?,
     val image: String?
 )
+
+data class Agent(
+    @Json(name = "id") val id: String = "",
+    @Json(name = "name") val name: String = "",
+    @Json(name = "description") val description: String? = null,
+    @Json(name = "image") val image: String? = null,
+    // O "team" geralmente é um objeto na API, não uma String pura
+    @Json(name = "team") val team: TeamInfo? = null,
+    @Json(name = "rarity") val rarity: RarityInfo? = null
+)
+
+// Crie essa classe auxiliar para o time (se não tiver ainda)
+data class TeamInfo(
+    @Json(name = "id") val id: String? = null,
+    @Json(name = "name") val name: String? = null
+)
