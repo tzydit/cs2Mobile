@@ -20,7 +20,9 @@ class StickersViewModel : ViewModel() {
     var uiState by mutableStateOf(StickersUiState(isLoading = true))
         private set
 
-    init { fetchStickers() }
+    init {
+        fetchStickers()
+    }
 
     fun retry() = fetchStickers()
 
@@ -46,7 +48,11 @@ class StickersViewModel : ViewModel() {
                     break
                 } catch (e: Throwable) {
                     last = e
-                    Log.e("StickersVM", "lang=$lang falhou (code=${(e as? HttpException)?.code()})", e)
+                    Log.e(
+                        "StickersVM",
+                        "lang=$lang falhou (code=${(e as? HttpException)?.code()})",
+                        e
+                    )
                 }
             }
 
